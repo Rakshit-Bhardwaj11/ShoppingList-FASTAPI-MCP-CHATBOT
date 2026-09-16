@@ -1,7 +1,7 @@
 alembic>=1.16.2
 fastapi>=0.115.13
 fastapi-mcp>=0.3.4
-gradio>=5.34.1
+streamlit
 langchain>=0.3.25
 langchain-core>=0.3.0
 langchain-mcp-adapters>=0.1.7
