@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -7,6 +6,7 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.agents import create_agent
 
 load_dotenv()
+
 
 if not os.getenv("HF_TOKEN"):
     raise ValueError("HF_TOKEN environment variable is not set")
@@ -23,7 +23,7 @@ async def create_shopping_agent():
     mcp_client = MultiServerMCPClient(
         {
             "ShoppingList": {
-                "url": "https://shopping-list-fastapi-mcp.onrender.com/mcp",,
+                "url": "https://shopping-list-fastapi-mcp.onrender.com/mcp",
                 "transport": "sse",
             }
         }
