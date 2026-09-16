@@ -23,7 +23,7 @@ async def create_shopping_agent():
     mcp_client = MultiServerMCPClient(
         {
             "ShoppingList": {
-                "url": "http://localhost:8000/mcp",
+                "url": "https://shopping-list-fastapi-mcp.onrender.com/mcp",,
                 "transport": "sse",
             }
         }
