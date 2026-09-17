@@ -18,26 +18,49 @@ st.caption(
 )
 
 
+# -----------------------------
+# Persistent asyncio event loop
+# -----------------------------
+
+if "event_loop" not in st.session_state:
+    st.session_state.event_loop = asyncio.new_event_loop()
+
+
+def run_async(coroutine):
+    return st.session_state.event_loop.run_until_complete(coroutine)
+
+
+# -----------------------------
+# Chat history
+# -----------------------------
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 
-async def run_agent():
-    agent = await create_shopping_agent()
+# -----------------------------
+# Create agent once
+# -----------------------------
 
-    result = await agent.ainvoke(
-        {
-            "messages": st.session_state.messages
-        }
+if "agent" not in st.session_state:
+    st.session_state.agent = run_async(
+        create_shopping_agent()
     )
 
-    return result
 
+# -----------------------------
+# Display previous messages
+# -----------------------------
 
 for message in st.session_state.messages:
+
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+
+# -----------------------------
+# User input
+# -----------------------------
 
 user_input = st.chat_input(
     "What would you like to do?"
@@ -60,7 +83,13 @@ if user_input:
 
         with st.spinner("Thinking..."):
 
-            result = asyncio.run(run_agent())
+            result = run_async(
+                st.session_state.agent.ainvoke(
+                    {
+                        "messages": st.session_state.messages
+                    }
+                )
+            )
 
             response = result["messages"][-1].content
 
