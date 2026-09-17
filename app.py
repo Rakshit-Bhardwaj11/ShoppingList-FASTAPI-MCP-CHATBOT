@@ -22,12 +22,19 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 
-if "agent" not in st.session_state:
-    st.session_state.agent = asyncio.run(create_shopping_agent())
+async def run_agent():
+    agent = await create_shopping_agent()
+
+    result = await agent.ainvoke(
+        {
+            "messages": st.session_state.messages
+        }
+    )
+
+    return result
 
 
 for message in st.session_state.messages:
-
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
@@ -53,13 +60,7 @@ if user_input:
 
         with st.spinner("Thinking..."):
 
-            result = asyncio.run(
-                st.session_state.agent.ainvoke(
-                    {
-                        "messages": st.session_state.messages
-                    }
-                )
-            )
+            result = asyncio.run(run_agent())
 
             response = result["messages"][-1].content
 
